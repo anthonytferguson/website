@@ -66,7 +66,7 @@ export function ContactPage() {
               </div>
               <div>
                 <p className="font-semibold">Email</p>
-                <p className="text-muted-foreground">hello@tendre.services</p>
+                <p className="text-muted-foreground">hello@tendr.services</p>
               </div>
             </div>
             <div className="flex gap-4">

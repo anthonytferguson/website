@@ -8,7 +8,7 @@ export function AboutPage() {
       {/* Hero */}
       <section className="bg-muted/30 py-20">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">About Tendre</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">About Tendr</h1>
           <p className="text-xl text-muted-foreground">
             We're a team of dedicated professionals committed to making home maintenance 
             simple, reliable, and high-quality for every homeowner.
@@ -30,7 +30,7 @@ export function AboutPage() {
           <div className="space-y-6">
             <h2 className="text-3xl font-bold">Our Story</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Founded in 2014, Tendre started with a simple mission: to provide reliable 
+              Founded in 2014, Tendr started with a simple mission: to provide reliable 
               home maintenance services that people can actually count on. We saw too 
               many homeowners struggling with unreliable contractors and inconsistent quality.
             </p>

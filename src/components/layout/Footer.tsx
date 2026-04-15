@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link to="/" className="flex items-center">
-              <img src={logoSrc} alt="Tendre Logo" className="h-12 w-auto" />
+              <img src={logoSrc} alt="Tendr Logo" className="h-12 w-auto" />
             </Link>
             <p className="text-sm text-muted-foreground">
               Professional home maintenance services you can trust. From lawns to decks, we've got you covered.
@@ -33,14 +33,14 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Email: hello@tendre.services</li>
+              <li>Email: hello@tendr.services</li>
               <li>Phone: (555) 123-4567</li>
               <li>Hours: Mon-Fri 8am-6pm</li>
             </ul>
           </div>
         </div>
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Tendre Home Maintenance. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Tendr Home Maintenance. All rights reserved.</p>
         </div>
       </div>
     </footer>
