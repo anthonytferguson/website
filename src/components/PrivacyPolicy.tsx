@@ -40,7 +40,7 @@ export function PrivacyPolicy() {
         <h2 className="text-2xl font-bold mt-8 mb-4">5. Contact Us</h2>
         <p className="mb-4">
           If you have any questions about this Privacy Policy, please contact us at 
-          hello@tendr.services.
+          hello@tendre.services.
         </p>
       </div>
     </div>

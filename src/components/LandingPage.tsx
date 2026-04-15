@@ -132,7 +132,7 @@ export function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose Tendr?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose Tendre?</h2>
               <p className="text-muted-foreground text-lg mb-8">
                 We pride ourselves on delivering exceptional quality and reliability. 
                 Our team is dedicated to making home maintenance stress-free for you.

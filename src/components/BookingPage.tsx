@@ -130,7 +130,7 @@ export function BookingPage() {
         </div>
         <h1 className="text-3xl font-bold mb-4">Request Received!</h1>
         <p className="text-muted-foreground max-w-md mb-8">
-          Thank you for choosing Tendr. We've received your booking request and will contact you within 24 hours to confirm the details.
+          Thank you for choosing Tendre. We've received your booking request and will contact you within 24 hours to confirm the details.
         </p>
         <div className="flex gap-4">
           <Button onClick={() => navigate("/dashboard")}>Go to Dashboard</Button>
@@ -277,7 +277,7 @@ export function BookingPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Why Tendr?</CardTitle>
+              <CardTitle>Why Tendre?</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
               <div className="flex gap-3">
@@ -304,7 +304,7 @@ export function BookingPage() {
           <Card className="bg-muted/50 border-none">
             <CardContent className="pt-6">
               <p className="text-sm italic text-muted-foreground">
-                "Tendr made building our new fence so easy. The team was professional and the quality is outstanding."
+                "Tendre made building our new fence so easy. The team was professional and the quality is outstanding."
               </p>
               <p className="text-xs font-semibold mt-4">— Sarah J., Homeowner</p>
             </CardContent>
