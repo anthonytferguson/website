@@ -47,8 +47,8 @@ export function LandingPage() {
       <section className="relative h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80"
-            alt="Close up of lush green grass at sunset"
+            src="/hero.jpg"
+            alt="Tendr Hero"
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
@@ -61,8 +61,8 @@ export function LandingPage() {
             className="max-w-2xl"
           >
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-              Swipe right for the <br />
-              <span className="text-primary">garden of your dreams.</span>
+              Swipe right for the<br />
+              <span className="text-5xl md:text-7xl font-bold tracking-tight mb-6">garden of your dreams.</span>
             </h1>
             <p className="text-xl text-gray-200 mb-8">
               Professional lawn - garden care, deck - fence construction, and rubbish removal services. 
