@@ -7,8 +7,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { CalendarIcon, Loader2, CheckCircle2, Upload, X } from "lucide-react";
+import React, { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,7 @@ const bookingSchema = z.object({
     message: "Address must be at least 5 characters.",
   }),
   notes: z.string().optional(),
+  photoUrl: z.string().optional(),
 });
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
@@ -95,8 +96,53 @@ export function BookingPage() {
       serviceType: initialService,
       address: "",
       notes: "",
+      photoUrl: "",
     },
   });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedImage, setUploadedImage] = useState<{ url: string; name: string } | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadError(null);
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Upload failed");
+      }
+
+      setUploadedImage({ url: result.url, name: file.name });
+      form.setValue("photoUrl", result.url);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  }
+
+  function removeImage() {
+    setUploadedImage(null);
+    form.setValue("photoUrl", "");
+  }
 
   async function onSubmit(data: BookingFormValues) {
     if (!user) {
@@ -113,7 +159,8 @@ export function BookingPage() {
         userEmail: user.email,
         status: 'pending',
         createdAt: serverTimestamp(),
-        date: data.date.toISOString(), // Store as ISO string for simplicity in this demo
+        date: data.date.toISOString(),
+        photoUrl: data.photoUrl || null,
       });
       setIsSubmitted(true);
       toast.success("Booking request sent successfully!");
@@ -258,7 +305,62 @@ export function BookingPage() {
                     )}
                   />
 
-                  <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                  <div className="space-y-2">
+                    <Label>Photo (optional)</Label>
+                    <p className="text-sm text-muted-foreground">Upload a photo of the area that needs work.</p>
+                    {uploadedImage ? (
+                      <div className="relative inline-block">
+                        <img
+                          src={uploadedImage.url}
+                          alt={uploadedImage.name}
+                          className="w-40 h-40 object-cover rounded-md border"
+                        />
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:opacity-80"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                        <p className="text-xs text-muted-foreground mt-1 truncate max-w-[160px]">{uploadedImage.name}</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/png,image/jpeg,image/gif,image/webp"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          id="photo-upload"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={isUploading}
+                          onClick={() => fileInputRef.current?.click()}
+                          className="w-full border-dashed"
+                        >
+                          {isUploading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Uploading...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload Photo
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                    {uploadError && (
+                      <p className="text-sm text-destructive">{uploadError}</p>
+                    )}
+                  </div>
+
+                  <Button type="submit" className="w-full" disabled={form.formState.isSubmitting || isUploading}>
                     {form.formState.isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
