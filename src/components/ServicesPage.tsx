@@ -10,7 +10,7 @@ const services = [
     title: "Lawn Maintenance",
     description: "Keep your lawn healthy and beautiful all year round with our professional care services.",
     icon: Sprout,
-    image: "https://picsum.photos/seed/lawn-detail/1200/800",
+    image: "/lawn-detail.jpeg",
     features: [
       "Regular Mowing & Edging",
       "Fertilization & Weed Control",
