@@ -75,7 +75,7 @@ export function ContactPage() {
               </div>
               <div>
                 <p className="font-semibold">Phone</p>
-                <p className="text-muted-foreground">(555) 123-4567</p>
+                <p className="text-muted-foreground">0468 166 687</p>
               </div>
             </div>
             <div className="flex gap-4">
