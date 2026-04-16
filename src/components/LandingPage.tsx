@@ -47,7 +47,7 @@ export function LandingPage() {
       <section className="relative h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="/hero.jpg"
+            src="https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/hero.jpg"
             alt="Tendr Hero"
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -148,7 +148,7 @@ export function LandingPage() {
             </div>
             <div className="relative">
               <img
-                src="/gardener.jpg"
+                src="https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/gardener.jpg"
                 alt="Our Expert Gardener"
                 className="rounded-2xl shadow-2xl w-full h-auto object-cover"
                 referrerPolicy="no-referrer"
