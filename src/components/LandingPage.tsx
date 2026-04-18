@@ -10,7 +10,7 @@ const services = [
     title: "Lawn and Garden Maintenance",
     description: "Professional mowing, edging, and lawn care to keep your garden looking pristine.",
     icon: Sprout,
-    image: "https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&w=800&q=80",
+    image: "https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/lawn-maint.jpg",
     price: "From $50"
   },
   {
@@ -18,7 +18,7 @@ const services = [
     title: "Decks & Fences",
     description: "Custom design and construction of high-quality decks and fences for your home.",
     icon: Hammer,
-    image: "https://picsum.photos/seed/deck/800/600",
+    image: "https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/decks.jpg",
     price: "Custom Quote"
   },
   {
@@ -26,7 +26,7 @@ const services = [
     title: "Rubbish Removal",
     description: "Fast and efficient removal of garden waste, household junk, and construction debris.",
     icon: Trash2,
-    image: "https://picsum.photos/seed/rubbish/800/600",
+    image: "https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/rubbish.jpg",
     price: "From $80"
   }
 ];

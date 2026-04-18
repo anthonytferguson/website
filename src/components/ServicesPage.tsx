@@ -10,7 +10,7 @@ const services = [
     title: "Lawn Maintenance",
     description: "Keep your lawn healthy and beautiful all year round with our professional care services.",
     icon: Sprout,
-    image: "https://picsum.photos/seed/lawn-detail/1200/800",
+    image: "https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/lawn-maint.jpg",
     features: [
       "Regular Mowing & Edging",
       "Fertilization & Weed Control",
@@ -25,7 +25,7 @@ const services = [
     title: "Decks & Fences",
     description: "Enhance your outdoor living space with custom-built decks and secure, stylish fencing.",
     icon: Hammer,
-    image: "https://picsum.photos/seed/deck-detail/1200/800",
+    image: "https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/decks.jpg",
     features: [
       "Custom Deck Design",
       "Timber & Composite Options",
@@ -40,7 +40,7 @@ const services = [
     title: "Rubbish Removal",
     description: "Clear out the clutter with our fast and responsible rubbish removal services.",
     icon: Trash2,
-    image: "https://picsum.photos/seed/rubbish-detail/1200/800",
+    image: "https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/rubbish.jpg",
     features: [
       "Garden Waste Removal",
       "Household Junk Clearing",
