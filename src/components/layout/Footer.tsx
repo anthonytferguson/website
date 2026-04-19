@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link to="/" className="flex items-center">
-              <img src="/logo.png" alt="Tendr Logo" className="h-12 w-auto" />
+              <img src="https://tendr-images-bucket.s3.ap-southeast-2.amazonaws.com/logo.png" alt="Tendr Logo" className="h-12 w-auto" />
             </Link>
             <p className="text-sm text-muted-foreground">
               Professional home maintenance services you can trust. From lawns to decks, we've got you covered.
