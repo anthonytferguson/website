@@ -3,13 +3,56 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { db, auth } from "../lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+enum OperationType {
+  CREATE = 'create',
+  WRITE = 'write',
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 export function ContactPage() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = React.useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("Message sent! We'll get back to you soon.");
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+      createdAt: serverTimestamp(),
+    };
+
+    const path = 'inquiries';
+    try {
+      await addDoc(collection(db, path), data);
+      toast.success("Message sent! We'll get back to you soon.");
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, path);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,28 +72,33 @@ export function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" placeholder="John Doe" required />
+                    <Input id="name" name="name" placeholder="John Doe" required />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" placeholder="john@example.com" required />
+                    <Input id="email" name="email" type="email" placeholder="john@example.com" required />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="How can we help?" required />
+                  <Input id="subject" name="subject" placeholder="How can we help?" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
                   <textarea
                     id="message"
+                    name="message"
                     className="flex min-h-[150px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="Tell us more..."
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full md:w-auto gap-2">
-                  Send Message <Send className="h-4 w-4" />
+                <Button type="submit" disabled={loading} className="w-full md:w-auto gap-2">
+                  {loading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Sending...</>
+                  ) : (
+                    <>Send Message <Send className="h-4 w-4" /></>
+                  )}
                 </Button>
               </form>
             </CardContent>

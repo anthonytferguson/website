@@ -41,6 +41,19 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "serviceType", "date", "address", "status"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Customer contact inquiry",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "subject", "message"]
     }
   },
   "firestore": {
@@ -55,6 +68,10 @@
     "/bookings/{bookingId}": {
       "schema": "Booking",
       "description": "Service bookings"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "Inquiry",
+      "description": "Contact form inquiries"
     }
   }
 }

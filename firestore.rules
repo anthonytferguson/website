@@ -95,5 +95,15 @@ service cloud.firestore {
                       (request.resource.data.status == 'cancelled' || isAdmin());
       allow delete: if isAdmin();
     }
+
+    match /inquiries/{inquiryId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'subject', 'message', 'createdAt']) &&
+                      isValidEmail(request.resource.data.email) &&
+                      request.resource.data.name.size() > 0 &&
+                      request.resource.data.subject.size() > 0 &&
+                      request.resource.data.message.size() > 0;
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+    }
   }
 }
