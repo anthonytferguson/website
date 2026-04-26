@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -88,6 +88,15 @@ export function BookingPage() {
   const initialService = searchParams.get("service") || "";
   
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast.info("Please login to continue with your booking.");
+      const redirectUrl = "/book" + (initialService ? `?service=${initialService}` : "");
+      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
+    }
+  }, [user, authLoading, navigate, initialService]);
 
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),

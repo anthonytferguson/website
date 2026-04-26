@@ -4,12 +4,14 @@ import { Hammer, Loader2 } from "lucide-react";
 import { auth } from "../lib/firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/dashboard";
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -17,10 +19,14 @@ export function LoginPage() {
     try {
       await signInWithPopup(auth, provider);
       toast.success("Logged in successfully!");
-      navigate("/dashboard");
-    } catch (error) {
+      navigate(redirectPath);
+    } catch (error: any) {
       console.error("Login error:", error);
-      toast.error("Failed to login. Please try again.");
+      if (error?.code === 'auth/popup-blocked') {
+        toast.error("Login popup was blocked by your browser. Please allow popups for this site and try again.");
+      } else {
+        toast.error(`Failed to login: ${error.message || "Please try again."}`);
+      }
     } finally {
       setLoading(false);
     }

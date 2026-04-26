@@ -240,12 +240,16 @@ export function Dashboard() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Total Bookings</span>
-                <span className="font-bold">2</span>
+                <span className="text-sm text-muted-foreground">{isAdmin ? "Total Active Inquiries" : "Your Total Bookings"}</span>
+                <span className="font-bold">{isAdmin ? inquiries.length : bookings.length}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Member Since</span>
-                <span className="font-bold">May 2024</span>
+                <span className="font-bold">
+                  {user?.metadata.creationTime 
+                    ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+                    : "Unknown"}
+                </span>
               </div>
               <div className="pt-4 border-t">
                 <Button variant="outline" className="w-full">Edit Profile</Button>
