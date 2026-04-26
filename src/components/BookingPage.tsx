@@ -173,12 +173,10 @@ export function BookingPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Service Type</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a service" />
-                              </SelectTrigger>
-                            </FormControl>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a service" />
+                            </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="lawn">Lawn Maintenance</SelectItem>
                               <SelectItem value="decks">Decks & Fences</SelectItem>
@@ -196,15 +194,12 @@ export function BookingPage() {
                         <FormItem className="flex flex-col">
                           <FormLabel className="mb-2">Preferred Date</FormLabel>
                           <Popover>
-                            <PopoverTrigger render={
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              />
-                            }>
+                            <PopoverTrigger
+                              className={cn(
+                                "flex h-8 w-full items-center justify-between rounded-lg border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
                               {field.value ? (
                                 format(field.value, "PPP")
                               ) : (

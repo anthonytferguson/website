@@ -50,9 +50,7 @@ export function Navbar() {
                 Book Now
               </Button>
               <DropdownMenu>
-                <DropdownMenuTrigger render={
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full" />
-                }>
+                <DropdownMenuTrigger className="relative h-8 w-8 rounded-full hover:bg-muted transition-colors rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.photoURL || ""} alt={user.displayName || ""} />
                       <AvatarFallback>{user.displayName?.charAt(0) || <UserIcon className="h-4 w-4" />}</AvatarFallback>
