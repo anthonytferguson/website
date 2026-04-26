@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Sprout, Hammer, Trash2, CheckCircle2, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 
 const services = [
   {
@@ -93,10 +94,8 @@ export function ServicesPage() {
                   <p className="font-semibold text-primary">{service.pricing}</p>
                 </div>
 
-                <Button asChild size="lg" className="gap-2">
-                  <Link to={`/book?service=${service.id}`}>
-                    Book This Service <ArrowRight className="h-4 w-4" />
-                  </Link>
+                <Button size="lg" className="gap-2" render={<Link to={`/book?service=${service.id}`} />}>
+                  Book This Service <ArrowRight className="h-4 w-4" />
                 </Button>
               </motion.div>
             </div>
@@ -121,5 +120,3 @@ export function ServicesPage() {
     </div>
   );
 }
-
-import { cn } from "@/lib/utils";

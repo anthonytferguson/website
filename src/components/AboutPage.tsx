@@ -99,8 +99,8 @@ export function AboutPage() {
         <p className="text-muted-foreground max-w-xl mx-auto mb-8">
           We're always looking for skilled professionals who share our passion for quality work.
         </p>
-        <Button asChild variant="outline" size="lg">
-          <Link to="/contact">Contact Us Today</Link>
+        <Button variant="outline" size="lg" render={<Link to="/contact" />}>
+          Contact Us Today
         </Button>
       </section>
     </div>

@@ -69,11 +69,11 @@ export function LandingPage() {
               Quality work delivered with care and precision.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="text-lg px-8">
-                <Link to="/book">Swipe Right</Link>
+              <Button size="lg" className="text-lg px-8" render={<Link to="/book" />}>
+                Swipe Right
               </Button>
-              <Button asChild size="lg" variant="outline" className="text-lg px-8 bg-white/10 backdrop-blur hover:bg-white/20">
-                <Link to="/services">View Services</Link>
+              <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 backdrop-blur hover:bg-white/20" render={<Link to="/services" />}>
+                View Services
               </Button>
             </div>
           </motion.div>
@@ -115,10 +115,8 @@ export function LandingPage() {
                 </CardHeader>
                 <CardContent className="mt-auto pt-4 flex items-center justify-between border-t">
                   <span className="font-semibold text-primary">{service.price}</span>
-                  <Button variant="ghost" size="sm" asChild className="gap-2">
-                    <Link to={`/book?service=${service.id}`}>
-                      Book <ArrowRight className="h-4 w-4" />
-                    </Link>
+                  <Button variant="ghost" size="sm" className="gap-2" render={<Link to={`/book?service=${service.id}`} />}>
+                    Book <ArrowRight className="h-4 w-4" />
                   </Button>
                 </CardContent>
               </Card>
@@ -170,8 +168,8 @@ export function LandingPage() {
             <p className="text-primary-foreground/80 text-lg mb-10">
               Book your service online today and join hundreds of satisfied homeowners.
             </p>
-            <Button asChild size="lg" variant="secondary" className="text-lg px-10">
-              <Link to="/book">Book Now</Link>
+            <Button size="lg" variant="secondary" className="text-lg px-10" render={<Link to="/book" />}>
+              Book Now
             </Button>
           </div>
           {/* Decorative elements */}

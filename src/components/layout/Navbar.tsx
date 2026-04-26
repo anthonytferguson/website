@@ -46,19 +46,19 @@ export function Navbar() {
           
           {user ? (
             <div className="flex items-center gap-4">
-              <Button asChild variant="default" size="sm">
-                <Link to="/book">Book Now</Link>
+              <Button variant="default" size="sm" render={<Link to="/book" />}>
+                Book Now
               </Button>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <DropdownMenuTrigger render={
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full" />
+                }>
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.photoURL || ""} alt={user.displayName || ""} />
                       <AvatarFallback>{user.displayName?.charAt(0) || <UserIcon className="h-4 w-4" />}</AvatarFallback>
                     </Avatar>
-                  </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuContent className="w-56" align="end">
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">{user.displayName}</p>
@@ -66,8 +66,8 @@ export function Navbar() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard">Dashboard</Link>
+                  <DropdownMenuItem render={<Link to="/dashboard" />}>
+                    Dashboard
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
@@ -78,11 +78,11 @@ export function Navbar() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Button asChild variant="default" size="sm">
-                <Link to="/book">Book Now</Link>
+              <Button variant="default" size="sm" render={<Link to="/book" />}>
+                Book Now
               </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/login">Login</Link>
+              <Button variant="outline" size="sm" render={<Link to="/login" />}>
+                Login
               </Button>
             </div>
           )}
@@ -138,16 +138,16 @@ export function Navbar() {
                 </Link>
               )}
               <div className="flex flex-col gap-2 pt-2">
-                <Button asChild className="w-full">
-                  <Link to="/book" onClick={() => setIsOpen(false)}>Book Now</Link>
+                <Button className="w-full" render={<Link to="/book" onClick={() => setIsOpen(false)} />}>
+                  Book Now
                 </Button>
                 {user ? (
                   <Button variant="outline" className="w-full" onClick={() => { handleLogout(); setIsOpen(false); }}>
                     Logout
                   </Button>
                 ) : (
-                  <Button asChild variant="outline" className="w-full">
-                    <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                  <Button variant="outline" className="w-full" render={<Link to="/login" onClick={() => setIsOpen(false)} />}>
+                    Login
                   </Button>
                 )}
               </div>

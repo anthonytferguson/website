@@ -24,6 +24,8 @@ export function LoginPage() {
       console.error("Login error:", error);
       if (error?.code === 'auth/popup-blocked') {
         toast.error("Login popup was blocked by your browser. Please allow popups for this site and try again.");
+      } else if (error?.code === 'auth/unauthorized-domain') {
+        toast.error("Unauthorized domain. Please add 'tendr.services' and the current domain to your Firebase Authorized Domains in the Firebase Console.");
       } else {
         toast.error(`Failed to login: ${error.message || "Please try again."}`);
       }
