@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { db, auth } from "../lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "../lib/AuthContext";
+import { sendEmailNotification } from "../lib/emailService";
 
 const bookingSchema = z.object({
   serviceType: z.string().min(1, "Please select a service type."),
@@ -124,6 +125,23 @@ export function BookingPage() {
         createdAt: serverTimestamp(),
         date: data.date.toISOString(), // Store as ISO string for simplicity in this demo
       });
+
+      // Send email notification
+      const templateId = import.meta.env.VITE_EMAILJS_BOOKING_TEMPLATE_ID;
+      if (templateId) {
+        await sendEmailNotification(templateId, {
+          to_name: "Tendr Admin",
+          from_name: user.displayName || user.email || "A customer",
+          from_email: user.email || "",
+          subject: `New Booking Request: ${data.serviceType}`,
+          message: `A new booking request has been submitted.\n\nService: ${data.serviceType}\nDate: ${format(data.date, "PPP")}\nAddress: ${data.address}\nNotes: ${data.notes || "None"}`,
+          service_type: data.serviceType,
+          date_requested: format(data.date, "PPP"),
+          service_address: data.address,
+          customer_notes: data.notes || "None"
+        });
+      }
+
       setIsSubmitted(true);
       toast.success("Booking request sent successfully!");
     } catch (error) {

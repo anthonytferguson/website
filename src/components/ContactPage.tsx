@@ -7,6 +7,7 @@ import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { db, auth } from "../lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { sendEmailNotification } from "../lib/emailService";
 
 enum OperationType {
   CREATE = 'create',
@@ -46,6 +47,21 @@ export function ContactPage() {
     const path = 'inquiries';
     try {
       await addDoc(collection(db, path), data);
+
+      // Send email notification
+      const templateId = import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID;
+      if (templateId) {
+        await sendEmailNotification(templateId, {
+          to_name: "Tendr Admin",
+          from_name: data.name,
+          from_email: data.email,
+          subject: `New Inquiry: ${data.subject}`,
+          message: `A new inquiry has been received.\n\nFrom: ${data.name}\nEmail: ${data.email}\nSubject: ${data.subject}\n\nMessage:\n${data.message}`,
+          inquiry_subject: data.subject,
+          inquiry_message: data.message
+        });
+      }
+
       toast.success("Message sent! We'll get back to you soon.");
       (e.target as HTMLFormElement).reset();
     } catch (error) {
