@@ -21,6 +21,9 @@ import { useAuth } from "../lib/AuthContext";
 import { sendEmailNotification } from "../lib/emailService";
 
 const bookingSchema = z.object({
+  name: z.string().min(2, "Please enter your full name."),
+  email: z.string().email("Please enter a valid email address."),
+  phone: z.string().min(8, "Please enter a valid phone number."),
   serviceType: z.string().min(1, "Please select a service type."),
   date: z.date(),
   address: z.string().min(5, {
@@ -90,40 +93,36 @@ export function BookingPage() {
   
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      toast.info("Please login to continue with your booking.");
-      const redirectUrl = "/book" + (initialService ? `?service=${initialService}` : "");
-      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
-    }
-  }, [user, authLoading, navigate, initialService]);
-
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
+      name: user?.displayName || "",
+      email: user?.email || "",
+      phone: "",
       serviceType: initialService,
       address: "",
       notes: "",
     },
   });
 
-  async function onSubmit(data: BookingFormValues) {
-    if (!user) {
-      toast.error("Please login to book a service.");
-      navigate("/login");
-      return;
+  // Update form values when user changes
+  useEffect(() => {
+    if (user) {
+      form.setValue("name", user.displayName || "");
+      form.setValue("email", user.email || "");
     }
+  }, [user, form]);
 
+  async function onSubmit(data: BookingFormValues) {
     const path = 'bookings';
     try {
       await addDoc(collection(db, path), {
         ...data,
-        userId: user.uid,
-        userEmail: user.email,
+        userId: user?.uid || null,
+        userEmail: data.email, // Use email from form
         status: 'pending',
         createdAt: serverTimestamp(),
-        date: data.date.toISOString(), // Store as ISO string for simplicity in this demo
+        date: data.date.toISOString(), 
       });
 
       // Send email notification
@@ -131,19 +130,23 @@ export function BookingPage() {
       if (templateId) {
         await sendEmailNotification(templateId, {
           to_name: "Tendr Admin",
-          from_name: user.displayName || user.email || "A customer",
-          from_email: user.email || "",
+          from_name: data.name,
+          from_email: data.email,
+          phone: data.phone,
           subject: `New Booking Request: ${data.serviceType}`,
-          message: `A new booking request has been submitted.\n\nService: ${data.serviceType}\nDate: ${format(data.date, "PPP")}\nAddress: ${data.address}\nNotes: ${data.notes || "None"}`,
+          message: `A new booking request has been submitted.\n\nFrom: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nService: ${data.serviceType}\nDate: ${format(data.date, "PPP")}\nAddress: ${data.address}\nNotes: ${data.notes || "None"}`,
           service_type: data.serviceType,
           date_requested: format(data.date, "PPP"),
           service_address: data.address,
-          customer_notes: data.notes || "None"
+          customer_notes: data.notes || "None",
+          customer_name: data.name,
+          customer_email: data.email,
+          customer_phone: data.phone
         });
       }
 
-      setIsSubmitted(true);
       toast.success("Booking request sent successfully!");
+      navigate("/thank-you");
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, path);
     }
@@ -187,6 +190,48 @@ export function BookingPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Full Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="John Doe" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder="john@example.com" type="email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <Input placeholder="021 123 4567" type="tel" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
                       name="serviceType"
                       render={({ field }) => (
                         <FormItem>
@@ -196,15 +241,19 @@ export function BookingPage() {
                               <SelectValue placeholder="Select a service" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="lawn">Lawn Maintenance</SelectItem>
-                              <SelectItem value="decks">Decks & Fences</SelectItem>
-                              <SelectItem value="rubbish">Rubbish Removal</SelectItem>
+                              <SelectItem value="lawn_maintenance">Lawn Maintenance</SelectItem>
+                              <SelectItem value="decks_fences">Decks & Fences</SelectItem>
+                              <SelectItem value="rubbish_removal">Rubbish Removal</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="date"
@@ -214,7 +263,7 @@ export function BookingPage() {
                           <Popover>
                             <PopoverTrigger
                               className={cn(
-                                "flex h-8 w-full items-center justify-between rounded-lg border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                                "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -241,21 +290,20 @@ export function BookingPage() {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Service Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder="123 Maintenance St, Suburb" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name="address"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Service Address</FormLabel>
-                        <FormControl>
-                          <Input placeholder="123 Maintenance St, Suburb" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
                   <FormField
                     control={form.control}

@@ -14,6 +14,7 @@ import { ServicesPage } from "./components/ServicesPage";
 import { AboutPage } from "./components/AboutPage";
 import { ContactPage } from "./components/ContactPage";
 import { PrivacyPolicy } from "./components/PrivacyPolicy";
+import { ThankYouPage } from "./components/ThankYouPage";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./lib/AuthContext";
 
@@ -35,6 +36,7 @@ export default function App() {
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/thank-you" element={<ThankYouPage />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
               </Routes>
             </main>

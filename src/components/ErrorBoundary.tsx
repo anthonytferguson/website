@@ -26,9 +26,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public render() {
-    if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
+    const { hasError, error } = this.state;
+    const { children, fallback } = this.props;
+
+    if (hasError) {
+      if (fallback) {
+        return fallback;
       }
 
       return (
@@ -39,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="space-y-2">
             <h3 className="text-xl font-bold">Something went wrong</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              {this.state.error?.message || "An unexpected error occurred while rendering this component."}
+              {error?.message || "An unexpected error occurred while rendering this component."}
             </p>
           </div>
           <Button 
@@ -55,6 +58,6 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.props.children;
+    return children;
   }
 }
