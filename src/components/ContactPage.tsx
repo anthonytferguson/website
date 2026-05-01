@@ -5,28 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { db, auth } from "../lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { sendEmailNotification } from "../lib/emailService";
 
-enum OperationType {
-  CREATE = 'create',
-  WRITE = 'write',
-}
-
-function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-    },
-    operationType,
-    path
-  }
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
-}
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
 
 export function ContactPage() {
   const [loading, setLoading] = React.useState(false);
@@ -41,31 +21,40 @@ export function ContactPage() {
       email: formData.get("email") as string,
       subject: formData.get("subject") as string,
       message: formData.get("message") as string,
-      createdAt: serverTimestamp(),
     };
 
-    const path = 'inquiries';
-    try {
-      await addDoc(collection(db, path), data);
+    const payload = {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: `New Inquiry: ${data.subject} — ${data.name}`,
+      from_name: "Tendr Contact Form",
+      replyto: data.email,
+      email: data.email,
+      name: data.name,
+      inquiry_subject: data.subject,
+      message: data.message,
+      botcheck: "",
+    };
 
-      // Send email notification
-      const templateId = import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID;
-      if (templateId) {
-        await sendEmailNotification(templateId, {
-          to_name: "Tendr Admin",
-          from_name: data.name,
-          from_email: data.email,
-          subject: `New Inquiry: ${data.subject}`,
-          message: `A new inquiry has been received.\n\nFrom: ${data.name}\nEmail: ${data.email}\nSubject: ${data.subject}\n\nMessage:\n${data.message}`,
-          inquiry_subject: data.subject,
-          inquiry_message: data.message
-        });
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        throw new Error(json.message || "Submission failed");
       }
 
       toast.success("Message sent! We'll get back to you soon.");
       (e.target as HTMLFormElement).reset();
-    } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, path);
+    } catch (error: any) {
+      console.error("Contact submit error:", error);
+      toast.error("Something went wrong. Please try again or email hello@tendr.services.");
     } finally {
       setLoading(false);
     }

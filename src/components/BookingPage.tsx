@@ -7,7 +7,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, CheckCircle2 } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -15,10 +15,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { db, auth } from "../lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "../lib/AuthContext";
-import { sendEmailNotification } from "../lib/emailService";
+
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+
+const SERVICE_LABEL: Record<string, string> = {
+  lawn_maintenance: "Lawn & Garden Maintenance",
+  decks_fences:     "Decks & Fences",
+  rubbish_removal:  "Rubbish Removal",
+  other:            "Other",
+};
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Please enter your full name."),
@@ -34,56 +40,7 @@ const bookingSchema = z.object({
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
-enum OperationType {
-  CREATE = 'create',
-  UPDATE = 'update',
-  DELETE = 'delete',
-  LIST = 'list',
-  GET = 'get',
-  WRITE = 'write',
-}
 
-interface FirestoreErrorInfo {
-  error: string;
-  operationType: OperationType;
-  path: string | null;
-  authInfo: {
-    userId: string | undefined;
-    email: string | null | undefined;
-    emailVerified: boolean | undefined;
-    isAnonymous: boolean | undefined;
-    tenantId: string | null | undefined;
-    providerInfo: {
-      providerId: string;
-      displayName: string | null;
-      email: string | null;
-      photoUrl: string | null;
-    }[];
-  }
-}
-
-function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo: auth.currentUser?.providerData.map(provider => ({
-        providerId: provider.providerId,
-        displayName: provider.displayName,
-        email: provider.email,
-        photoUrl: provider.photoURL
-      })) || []
-    },
-    operationType,
-    path
-  }
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
-}
 
 export function BookingPage() {
   const [searchParams] = useSearchParams();
@@ -91,8 +48,6 @@ export function BookingPage() {
   const { user, loading: authLoading } = useAuth();
   const initialService = searchParams.get("service") || "";
   
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
@@ -114,60 +69,50 @@ export function BookingPage() {
   }, [user, form]);
 
   async function onSubmit(data: BookingFormValues) {
-    const path = 'bookings';
-    try {
-      await addDoc(collection(db, path), {
-        ...data,
-        userId: user?.uid || null,
-        userEmail: data.email, // Use email from form
-        status: 'pending',
-        createdAt: serverTimestamp(),
-        date: data.date.toISOString(), 
-      });
+    const service = SERVICE_LABEL[data.serviceType] ?? data.serviceType;
+    const dateStr = data.date
+      ? data.date.toLocaleDateString("en-NZ", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric",
+        })
+      : "Not specified";
 
-      // Send email notification
-      const templateId = import.meta.env.VITE_EMAILJS_BOOKING_TEMPLATE_ID;
-      if (templateId) {
-        await sendEmailNotification(templateId, {
-          to_name: "Tendr Admin",
-          from_name: data.name,
-          from_email: data.email,
-          phone: data.phone,
-          subject: `New Booking Request: ${data.serviceType}`,
-          message: `A new booking request has been submitted.\n\nFrom: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nService: ${data.serviceType}\nDate: ${format(data.date, "PPP")}\nAddress: ${data.address}\nNotes: ${data.notes || "None"}`,
-          service_type: data.serviceType,
-          date_requested: format(data.date, "PPP"),
-          service_address: data.address,
-          customer_notes: data.notes || "None",
-          customer_name: data.name,
-          customer_email: data.email,
-          customer_phone: data.phone
-        });
+    const payload = {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: `New booking: ${service} — ${data.name}`,
+      from_name: "Tendr Bookings",
+      replyto: data.email,
+      email: data.email,
+      name: data.name,
+      phone: data.phone,
+      service: service,
+      preferred_date: dateStr,
+      address: data.address,
+      notes: data.notes || "—",
+      botcheck: "",
+    };
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        throw new Error(json.message || "Submission failed");
       }
 
-      toast.success("Booking request sent successfully!");
+      toast.success("Booking sent! We'll get back to you within 24 hours.");
+      form.reset();
       navigate("/thank-you");
-    } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, path);
+    } catch (err: any) {
+      console.error("Booking submit error:", err);
+      toast.error("Something went wrong. Please try again or email hello@tendr.services.");
     }
-  }
-
-  if (isSubmitted) {
-    return (
-      <div className="container mx-auto px-4 py-20 flex flex-col items-center justify-center text-center">
-        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-          <CheckCircle2 className="h-10 w-10 text-primary" />
-        </div>
-        <h1 className="text-3xl font-bold mb-4">Request Received!</h1>
-        <p className="text-muted-foreground max-w-md mb-8">
-          Thank you for choosing Tendr. We've received your booking request and will contact you within 24 hours to confirm the details.
-        </p>
-        <div className="flex gap-4">
-          <Button onClick={() => navigate("/dashboard")}>Go to Dashboard</Button>
-          <Button variant="outline" onClick={() => navigate("/")}>Back to Home</Button>
-        </div>
-      </div>
-    );
   }
 
   return (
