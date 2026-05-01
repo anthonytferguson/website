@@ -17,7 +17,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useAuth } from "../lib/AuthContext";
 
-const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+const WEB3FORMS_ACCESS_KEY = "f900797c-f5ca-4e31-ad80-915a159ace50";
 
 const SERVICE_LABEL: Record<string, string> = {
   lawn_maintenance: "Lawn & Garden Maintenance",

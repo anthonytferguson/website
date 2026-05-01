@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+const WEB3FORMS_ACCESS_KEY = "3d90c060-e93a-4540-938c-e0cee60868b3";
 
 export function ContactPage() {
   const [loading, setLoading] = React.useState(false);
