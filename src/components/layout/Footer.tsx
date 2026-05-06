@@ -39,7 +39,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Tendr Home Maintenance. All rights reserved. DNvWUS DNvWUS</p>
+          <p>© {new Date().getFullYear()} Tendr Home Maintenance. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sprout, Hammer, Trash2, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect } from "react";
 
 const services = [
   {
@@ -40,7 +41,18 @@ const features = [
   "Reliable & Punctual"
 ];
 
+const words = ["garden of your", "lawn of your", "home of your"];
+
 export function LandingPage() {
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % words.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-col gap-20 pb-20">
       {/* Hero Section */}
@@ -60,13 +72,28 @@ export function LandingPage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
               Swipe right for the<br />
-              <span className="text-5xl md:text-7xl font-bold tracking-tight mb-6">garden of your dreams.</span>
+              <span className="relative inline-block text-green-500 min-w-[7em] md:min-w-[7.5em] h-[1.1em] align-bottom">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={words[wordIndex]}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="absolute left-0 bottom-0 whitespace-nowrap"
+                  >
+                    {words[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              <br />
+              <span>dreams.</span>
             </h1>
-            <p className="text-xl text-gray-200 mb-8">
-              Professional lawn - garden care, deck - fence construction, and rubbish removal services. 
-              Quality work delivered with care and precision.
+            <p className="text-xl text-gray-100 mb-8 max-w-xl leading-relaxed">
+              Professional lawn & garden care, deck & fence construction, and rubbish removal. 
+              Reliable quality and dedicated service you can trust.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="text-lg px-8" render={<Link to="/book" />}>
