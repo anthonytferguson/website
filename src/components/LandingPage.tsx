@@ -195,7 +195,7 @@ export function LandingPage() {
             <p className="text-primary-foreground/80 text-lg mb-10">
               Book your service online today and join hundreds of satisfied homeowners.
             </p>
-            <Button size="lg" variant="secondary" className="text-lg px-10" render={<Link to="/book" />}>
+            <Button size="lg" variant="secondary" className="text-lg px-10" render={<a href="https://app.tendr.services/" />}>
               Book Now
             </Button>
           </div>

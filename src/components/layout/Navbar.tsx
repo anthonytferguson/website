@@ -46,7 +46,7 @@ export function Navbar() {
           
           {user ? (
             <div className="flex items-center gap-4">
-              <Button variant="default" size="sm" render={<Link to="/book" />}>
+              <Button variant="default" size="sm" render={<a href="https://app.tendr.services/" />}>
                 Book Now
               </Button>
               <DropdownMenu>
@@ -80,7 +80,7 @@ export function Navbar() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="default" size="sm" render={<Link to="/book" />}>
+              <Button variant="default" size="sm" render={<a href="https://app.tendr.services/" />}>
                 Book Now
               </Button>
               <Button variant="outline" size="sm" render={<Link to="/login" />}>
@@ -140,7 +140,7 @@ export function Navbar() {
                 </Link>
               )}
               <div className="flex flex-col gap-2 pt-2">
-                <Button className="w-full" render={<Link to="/book" onClick={() => setIsOpen(false)} />}>
+                <Button className="w-full" render={<a href="https://app.tendr.services/" onClick={() => setIsOpen(false)} />}>
                   Book Now
                 </Button>
                 {user ? (
