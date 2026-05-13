@@ -96,7 +96,7 @@ export function LandingPage() {
               Reliable quality and dedicated service you can trust.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="text-lg px-8" render={<Link to="/book" />}>
+              <Button size="lg" className="text-lg px-8" render={<a href="https://app.tendr.services/" />}>
                 Swipe Right
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 backdrop-blur hover:bg-white/20" render={<Link to="/services" />}>
