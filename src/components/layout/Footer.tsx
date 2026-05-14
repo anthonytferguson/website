@@ -33,7 +33,7 @@ export function Footer() {
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Email: hello@tendr.services</li>
-              <li>Phone: 0468 166 687</li>
+              <li>Phone: 61 7 4800 9033</li>
               <li>Hours: Mon-Fri 8am-6pm</li>
             </ul>
           </div>

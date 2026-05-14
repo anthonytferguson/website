@@ -128,7 +128,7 @@ export function ContactPage() {
               </div>
               <div>
                 <p className="font-semibold">Phone</p>
-                <p className="text-muted-foreground">0468 166 687</p>
+                <p className="text-muted-foreground">61 7 4800 9033</p>
               </div>
             </div>
             <div className="flex gap-4">
