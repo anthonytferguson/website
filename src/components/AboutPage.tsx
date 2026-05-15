@@ -99,7 +99,7 @@ export function AboutPage() {
         <p className="text-muted-foreground max-w-xl mx-auto mb-8">
           We're always looking for skilled professionals who share our passion for quality work.
         </p>
-        <Button variant="outline" size="lg" render={<Link to="/contact" />}>
+        <Button variant="outline" size="lg" render={<a href="https://app.tendr.services/contact" />}>
           Contact Us Today
         </Button>
       </section>

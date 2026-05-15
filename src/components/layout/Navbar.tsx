@@ -40,14 +40,14 @@ export function Navbar() {
           <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
             About
           </Link>
-          <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
+          <a href="https://app.tendr.services/contact" className="text-sm font-medium hover:text-primary transition-colors">
             Contact
-          </Link>
+          </a>
           
           {user ? (
             <div className="flex items-center gap-4">
               <Button variant="default" size="sm" render={<a href="https://app.tendr.services/" />}>
-                Book Now
+                Magic Quote
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger className="relative h-8 w-8 rounded-full hover:bg-muted transition-colors rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -81,10 +81,7 @@ export function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="default" size="sm" render={<a href="https://app.tendr.services/" />}>
-                Book Now
-              </Button>
-              <Button variant="outline" size="sm" render={<Link to="/login" />}>
-                Login
+                Magic Quote
               </Button>
             </div>
           )}
@@ -123,13 +120,13 @@ export function Navbar() {
               >
                 About
               </Link>
-              <Link
-                to="/contact"
+              <a
+                href="https://app.tendr.services/contact"
                 className="text-lg font-medium"
                 onClick={() => setIsOpen(false)}
               >
                 Contact
-              </Link>
+              </a>
               {user && (
                 <Link
                   to="/dashboard"
@@ -141,15 +138,11 @@ export function Navbar() {
               )}
               <div className="flex flex-col gap-2 pt-2">
                 <Button className="w-full" render={<a href="https://app.tendr.services/" onClick={() => setIsOpen(false)} />}>
-                  Book Now
+                  Magic Quote
                 </Button>
-                {user ? (
+                {user && (
                   <Button variant="outline" className="w-full" onClick={() => { handleLogout(); setIsOpen(false); }}>
                     Logout
-                  </Button>
-                ) : (
-                  <Button variant="outline" className="w-full" render={<Link to="/login" onClick={() => setIsOpen(false)} />}>
-                    Login
                   </Button>
                 )}
               </div>

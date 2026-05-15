@@ -94,8 +94,8 @@ export function ServicesPage() {
                   <p className="font-semibold text-primary">{service.pricing}</p>
                 </div>
 
-                <Button size="lg" className="gap-2" render={<Link to={`/book?service=${service.id}`} />}>
-                  Book This Service <ArrowRight className="h-4 w-4" />
+                <Button size="lg" className="gap-2" render={<a href="https://app.tendr.services/" />}>
+                  Magic Quote <ArrowRight className="h-4 w-4" />
                 </Button>
               </motion.div>
             </div>

@@ -142,8 +142,8 @@ export function LandingPage() {
                 </CardHeader>
                 <CardContent className="mt-auto pt-4 flex items-center justify-between border-t">
                   <span className="font-semibold text-primary">{service.price}</span>
-                  <Button variant="ghost" size="sm" className="gap-2" render={<Link to={`/book?service=${service.id}`} />}>
-                    Book <ArrowRight className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" className="gap-2" render={<a href="https://app.tendr.services/" />}>
+                    Magic Quote <ArrowRight className="h-4 w-4" />
                   </Button>
                 </CardContent>
               </Card>
@@ -196,7 +196,7 @@ export function LandingPage() {
               Book your service online today and join hundreds of satisfied homeowners.
             </p>
             <Button size="lg" variant="secondary" className="text-lg px-10" render={<a href="https://app.tendr.services/" />}>
-              Book Now
+              Magic Quote
             </Button>
           </div>
           {/* Decorative elements */}

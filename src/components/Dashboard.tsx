@@ -149,8 +149,8 @@ export function Dashboard() {
           </p>
         </div>
         {!isAdmin && (
-          <Button onClick={() => navigate("/book")}>
-            New Booking
+          <Button render={<a href="https://app.tendr.services/" />}>
+            Magic Quote
           </Button>
         )}
       </div>

@@ -25,7 +25,7 @@ export function Footer() {
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/about" className="hover:text-primary">About Us</Link></li>
-              <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
+              <li><a href="https://app.tendr.services/contact" className="hover:text-primary">Contact</a></li>
               <li><Link to="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
             </ul>
           </div>
